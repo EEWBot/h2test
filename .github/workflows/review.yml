@@ -31,6 +31,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
 
+      - run: |
+          echo > targets.txt
+
       - name: Get Rust toolchain
         id: toolchain
         run: |
