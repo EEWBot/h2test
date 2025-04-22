@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - 'Dockerfile'
+      - '*/src/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/ci.yml'
+  push:
+    branches:
+      - 'master'
+    tags:
+      - v*
+
+env:
+  CARGO_INCREMENTAL: 0
+  RUST_CACHE_VERSION: v1
+
+jobs:
+  rust:
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ghimage: ubuntu-24.04
+            dockerarch: linux/amd64
+            mcarch: amd64
+
+    permissions:
+      packages: write
+      checks: write
+      contents: read
+      deployments: write
+
+    runs-on: ${{ matrix.ghimage }}
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Get Rust toolchain
+        id: toolchain
+        run: |
+          awk -F'[ ="]+' '$1 == "channel" { print "toolchain=" $2 }' rust-toolchain >> "$GITHUB_OUTPUT"
+
+      - name: install clippy
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ steps.toolchain.outputs.toolchain }}
+          components: clippy
+
+      - name: cache dependencies
+        uses: Swatinem/rust-cache@v2.7.8
+        with:
+          prefix-key: ${{ env.RUST_CACHE_VERSION }}-rust
+
+      - name: clippy check
+        uses: yanorei32/action-clippy@50412b135153ebee7d4b8a5b868c4defdc663683
+        with:
+          reporter: github-check
+
+      - name: unit test
+        run: |
+          cargo test --no-run --locked
+          cargo test
+
+      - name: release build
+        run: cargo build --release
