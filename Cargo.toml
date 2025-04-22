@@ -1,0 +1,32 @@
+[package]
+name = "h2test"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bytes = "1.6.0"
+clap = { version = "4.5.4", features = ["derive", "env"] }
+itertools = "0.13.0"
+rand = "0.9.1"
+serde = { version = "1.0.200", features = ["derive"] }
+tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread", "sync", "time"] }
+tracing = "0.1.40"
+tracing-log = "0.2.0"
+tracing-subscriber = "0.3.18"
+h2 = "0.4.5"
+hickory-resolver = { version = "0.25.1", features = ["tokio", "system-config"] }
+tokio-rustls = "0.26.0"
+webpki-roots = "0.26.3"
+anyhow = "1.0.86"
+http = "1.1.0"
+chrono = "0.4.40"
+humantime = "2.2.0"
+
+[profile.release]
+#opt-level = "z"
+#debug = false
+#lto = true
+#strip = true
+#codegen-units = 1
