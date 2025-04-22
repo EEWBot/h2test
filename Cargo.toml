@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 bytes = "1.6.0"
 clap = { version = "4.5.4", features = ["derive", "env"] }
-itertools = "0.13.0"
+itertools = "0.14.0"
 rand = "0.9.1"
 serde = { version = "1.0.200", features = ["derive"] }
 tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread", "sync", "time"] }
