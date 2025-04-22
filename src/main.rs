@@ -60,8 +60,8 @@ async fn query_discord_ips() -> Vec<Ipv4Addr> {
 
     let mut ips = vec![];
     let response = resolver.lookup_ip("discord.com").await.unwrap();
-    ips.extend(response.iter().filter_map(|ip| match ip {
-        IpAddr::V4(ip) => Some(ip),
+    ips.extend(response.iter().map(|ip| match ip {
+        IpAddr::V4(ip) => ip,
         _ => panic!("WTF!? discord.com provides IPv6 Addr"),
     }));
 
