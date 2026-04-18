@@ -43,7 +43,7 @@ pub async fn sender(
 
     let mut interval = tokio::time::interval(req_interval);
 
-    for request_no in 0..req_count{
+    for request_no in 0..req_count {
         tokio::select! {
             _ = interval.tick() => {
                 let mut headers = HeaderMap::new();
@@ -81,7 +81,6 @@ pub async fn sender(
             err = rx.changed() => err?,
         }
     }
-
 
     let mut interval = tokio::time::interval(ping_interval);
 

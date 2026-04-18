@@ -5,7 +5,7 @@ use anyhow::Result as AHResult;
 use bytes::Bytes;
 use clap::{Parser, Subcommand};
 use h2::client::{Connection, SendRequest};
-use hickory_resolver::{config::ResolverConfig, name_server::TokioConnectionProvider, Resolver};
+use hickory_resolver::Resolver;
 use rand::seq::IndexedRandom;
 use tokio::net::TcpStream;
 use tokio_rustls::{
@@ -52,11 +52,7 @@ enum SubCommands {
 }
 
 async fn query_discord_ips() -> Vec<Ipv4Addr> {
-    let resolver = Resolver::builder_with_config(
-        ResolverConfig::default(),
-        TokioConnectionProvider::default(),
-    )
-    .build();
+    let resolver = Resolver::builder_tokio().unwrap().build().unwrap();
 
     let mut ips = vec![];
     let response = resolver.lookup_ip("discord.com").await.unwrap();
